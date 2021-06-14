@@ -15,6 +15,7 @@ export enum ChatMessageTypes {
 export interface ChatMessage {
     type: ChatMessageTypes;
     author: string;
+    visitCardUrl?: string;
     text: string;
 }
 
@@ -22,7 +23,7 @@ function createChatMessagesStore() {
     //todo: remove this list
     const dummyList: ChatMessage[] = [
         {type: ChatMessageTypes.userIncoming, author: 'someone', text: ''},
-        {type: ChatMessageTypes.text, author: 'someone', text: 'https://www.google.com is cool'},
+        {type: ChatMessageTypes.text, author: 'someone', text: 'https://www.google.com is cool', visitCardUrl: 'google.com'},
     ]
     const { subscribe, update} = writable<ChatMessage[]>(dummyList);
 

@@ -1,6 +1,4 @@
 <script lang="typescript">
-    import MenuIcon from "./Menu/MenuIcon.svelte";
-    import {menuIconVisible} from "../Stores/MenuStore";
     import {enableCameraSceneVisibilityStore, gameOverlayVisibilityStore} from "../Stores/MediaStore";
     import CameraControls from "./CameraControls.svelte";
     import MyCamera from "./MyCamera.svelte";
@@ -60,14 +58,6 @@
         <AudioPlaying url={$soundPlayingStore} />
     </div>
     {/if}
-
-    <!--
-    {#if $menuIconVisible}
-        <div>
-            <MenuIcon  />
-        </div>
-    {/if}
-    -->
     {#if $gameOverlayVisibilityStore}
         <div>
             <MyCamera></MyCamera>

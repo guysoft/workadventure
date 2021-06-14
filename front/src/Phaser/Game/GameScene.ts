@@ -653,14 +653,14 @@ export class GameScene extends DirtyScene implements CenterListener {
                 onConnect(user: UserSimplePeerInterface) {
                     self.presentationModeSprite.setVisible(true);
                     self.chatModeSprite.setVisible(true);
-                    self.openChatIcon.setVisible(true);
+                    //self.openChatIcon.setVisible(true);
                     audioManager.decreaseVolume();
                 },
                 onDisconnect(userId: number) {
                     if (self.simplePeer.getNbConnections() === 0) {
                         self.presentationModeSprite.setVisible(false);
                         self.chatModeSprite.setVisible(false);
-                        self.openChatIcon.setVisible(false);
+                        //self.openChatIcon.setVisible(false);
                         audioManager.restoreVolume();
                     }
                 }

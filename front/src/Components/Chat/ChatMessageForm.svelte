@@ -14,5 +14,11 @@
 </script>
 
 <form on:submit|preventDefault={saveMessage}>
-    <input type="text" bind:value={newMessageText} placeholder="new text"><button type="submit">Save</button>
+    <input type="text" bind:value={newMessageText} placeholder="Type here"><button type="submit">Save</button>
 </form>
+
+<style>
+    * {
+        font-family: 'Press Start 2P' !important;
+    }
+</style>
