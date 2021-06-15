@@ -1,19 +1,16 @@
 <script lang="ts">
-    import {chatMessagesStore, ChatMessageTypes} from "../../Stores/ChatStore";
+    import {chatMessagesStore} from "../../Stores/ChatStore";
 
     let newMessageText = '';
 
     function saveMessage() {
-        chatMessagesStore.addMessage({
-            text: newMessageText,
-            type: ChatMessageTypes.me,
-        });
+        chatMessagesStore.addPersonnalMessage(newMessageText);
         newMessageText = '';
     }
 </script>
 
 <form on:submit|preventDefault={saveMessage}>
-    <input type="text" bind:value={newMessageText} placeholder="Type here"><button type="submit">Save</button>
+    <input type="text" bind:value={newMessageText} placeholder="Type here"><button type="submit">Send</button>
 </form>
 
 <style>

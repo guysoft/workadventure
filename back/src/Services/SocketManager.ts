@@ -425,11 +425,8 @@ export class SocketManager {
             const serverToClientMessage1 = new ServerToClientMessage();
             serverToClientMessage1.setWebrtcstartmessage(webrtcStartMessage1);
 
-            //if (!user.socket.disconnecting) {
-                user.socket.write(serverToClientMessage1);
-                //console.log('Sending webrtcstart initiator to '+user.socket.userId)
-            //}
-
+            user.socket.write(serverToClientMessage1);
+            
             const webrtcStartMessage2 = new WebRtcStartMessage();
             webrtcStartMessage2.setUserid(user.id);
             webrtcStartMessage2.setName(user.name);
@@ -443,10 +440,7 @@ export class SocketManager {
             const serverToClientMessage2 = new ServerToClientMessage();
             serverToClientMessage2.setWebrtcstartmessage(webrtcStartMessage2);
 
-            //if (!otherUser.socket.disconnecting) {
-                otherUser.socket.write(serverToClientMessage2);
-                //console.log('Sending webrtcstart to '+otherUser.socket.userId)
-            //}
+            otherUser.socket.write(serverToClientMessage2);
 
         }
     }

@@ -5,8 +5,9 @@ import type {RoomConnection} from "../Connexion/RoomConnection";
 import {blackListManager} from "./BlackListManager";
 import type {Subscription} from "rxjs";
 import type {UserSimplePeerInterface} from "./SimplePeer";
-import {get} from "svelte/store";
+import {get, Unsubscriber} from "svelte/store";
 import {obtainedMediaConstraintStore} from "../Stores/MediaStore";
+import {chatMessagesStore, chatVisibilityStore, newChatMessageStore} from "../Stores/ChatStore";
 
 const Peer: SimplePeerNamespace.SimplePeer = require('simple-peer');
 
@@ -26,6 +27,7 @@ export class VideoPeer extends Peer {
     private userName: string;
     private onBlockSubscribe: Subscription;
     private onUnBlockSubscribe: Subscription;
+    private newMessageunsubscriber: Unsubscriber|null = null;
 
     constructor(public user: UserSimplePeerInterface, initiator: boolean, private connection: RoomConnection, localStream: MediaStream | null) {
         super({
@@ -70,7 +72,13 @@ export class VideoPeer extends Peer {
         this.on('connect', () => {
             this._connected = true;
             mediaManager.isConnected("" + this.userId);
-            console.info(`connect => ${this.userId}`);
+            chatMessagesStore.addIncomingUser(this.userName);
+
+            this.newMessageunsubscriber = newChatMessageStore.subscribe((newMessage) => {
+                if (!newMessage) return;
+                this.write(new Buffer(JSON.stringify({type: MESSAGE_TYPE_MESSAGE, name: this.userName, userId: this.userId, message: newMessage}))); //send more data
+                newChatMessageStore.set(null); //This is to prevent a newly created SimplePeer to send an old message a 2nd time. Is there a better way?
+            })
         });
 
         this.on('data',  (chunk: Buffer) => {
@@ -88,7 +96,10 @@ export class VideoPeer extends Peer {
                     mediaManager.disabledVideoByUserId(this.userId);
                 }
             } else if(message.type === MESSAGE_TYPE_MESSAGE) {
+                console.log('m', message)
                 if (!blackListManager.isBlackListed(message.userId)) {
+                    chatMessagesStore.addExternalMessage(message.name, message.message);
+                    chatVisibilityStore.set(true);
                     mediaManager.addNewMessage(message.name, message.message);
                 }
             } else if(message.type === MESSAGE_TYPE_BLOCKED) {
@@ -169,7 +180,9 @@ export class VideoPeer extends Peer {
             }
             this.onBlockSubscribe.unsubscribe();
             this.onUnBlockSubscribe.unsubscribe();
+            if (this.newMessageunsubscriber) this.newMessageunsubscriber();
             mediaManager.removeActiveVideo("" + this.userId);
+            chatMessagesStore.addOutcomingUser(this.userName);
             // FIXME: I don't understand why "Closing connection with" message is displayed TWICE before "Nb users in peerConnectionArray"
             // I do understand the method closeConnection is called twice, but I don't understand how they manage to run in parallel.
             super.destroy(error);

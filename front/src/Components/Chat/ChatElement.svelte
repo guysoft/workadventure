@@ -28,6 +28,7 @@
             <p class="my-text" contenteditable="true" bind:innerHTML={urlifyText}></p>
         {/if}
     </div>
+    {#if message.type !== ChatMessageTypes.me}
     <div class="buttonPart">
         <button class="text-btn" on:click={() => showMenu = !showMenu}>...</button>
         {#if showMenu}
@@ -36,6 +37,7 @@
             </ul>
         {/if}
     </div>
+    {/if}
 </div>
 
 <style lang="scss">
@@ -52,6 +54,7 @@
         p {
           border-radius: 8px;
           margin-bottom: 10px;
+          padding:4px;
           &.other-text {
             background: whitesmoke; 
           }

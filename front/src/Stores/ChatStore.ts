@@ -1,10 +1,8 @@
 import {writable} from "svelte/store";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare let window:any;
 
 export const chatVisibilityStore = writable(false);
 
-window.openChat = () => chatVisibilityStore.set(true) //todo: remove this
+export const newChatMessageStore = writable<string|null>(null);
 
 export enum ChatMessageTypes {
     text=1,
@@ -13,31 +11,53 @@ export enum ChatMessageTypes {
     userOutcoming,
 }
 
-export interface ChatMessageAuthor {
-    name: string,
-}
-
 export interface ChatMessage {
     type: ChatMessageTypes;
     author?: string;
     visitCardUrl?: string;
-    text: string;
+    text?: string;
 }
 
 function createChatMessagesStore() {
-    //todo: remove this list
-    const dummyList: ChatMessage[] = [
-        {type: ChatMessageTypes.userIncoming, author: 'someone', text: ''},
-        {type: ChatMessageTypes.text, author: 'someone', text: 'https://www.google.com is cool', visitCardUrl: 'google.com'},
-    ]
-    const { subscribe, update} = writable<ChatMessage[]>(dummyList);
+    const { subscribe, update} = writable<ChatMessage[]>([]);
 
     return {
         subscribe,
-        //todo: different setters for text message and system messages
-        addMessage: (newMessage: ChatMessage) => {
+        addIncomingUser(author: string) {
             update(list => {
-                list.push(newMessage)
+                list.push({
+                    type: ChatMessageTypes.userIncoming,
+                    author: author,
+                })
+                return list;
+            });
+        },
+        addOutcomingUser(author: string) {
+            update(list => {
+                list.push({
+                    type: ChatMessageTypes.userOutcoming,
+                    author: author,
+                })
+                return list;
+            });
+        },
+        addPersonnalMessage(text:string) {
+            newChatMessageStore.set(text);
+            update(list => {
+                list.push({
+                    type: ChatMessageTypes.me,
+                    text: text,
+                })
+                return list;
+            });
+        },
+        addExternalMessage(author: string, text: string) {
+            update(list => {
+                list.push({
+                    type: ChatMessageTypes.text,
+                    text: text,
+                    author: author,
+                })
                 return list;
             });
         },
