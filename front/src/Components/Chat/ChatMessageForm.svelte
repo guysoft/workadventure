@@ -6,8 +6,7 @@
     function saveMessage() {
         chatMessagesStore.addMessage({
             text: newMessageText,
-            author: 'me',
-            type: ChatMessageTypes.text,
+            type: ChatMessageTypes.me,
         });
         newMessageText = '';
     }

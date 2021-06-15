@@ -8,13 +8,18 @@ window.openChat = () => chatVisibilityStore.set(true) //todo: remove this
 
 export enum ChatMessageTypes {
     text=1,
+    me,
     userIncoming,
     userOutcoming,
 }
 
+export interface ChatMessageAuthor {
+    name: string,
+}
+
 export interface ChatMessage {
     type: ChatMessageTypes;
-    author: string;
+    author?: string;
     visitCardUrl?: string;
     text: string;
 }

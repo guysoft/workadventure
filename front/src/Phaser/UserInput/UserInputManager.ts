@@ -61,7 +61,6 @@ export class UserInputManager {
         }
 
         enableUserInputsStore.subscribe((enable) => {
-            console.log('eanble', enable)
             enable ? this.restoreControls() : this.disableControls()
         })
     }

@@ -1,4 +1,3 @@
-import {discussionManager} from "../../WebRtc/DiscussionManager";
 import {DEPTH_INGAME_TEXT_INDEX} from "../Game/DepthIndexes";
 import {chatVisibilityStore} from "../../Stores/ChatStore";
 

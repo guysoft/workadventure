@@ -4,7 +4,7 @@
     import {HtmlUtils} from "../../WebRtc/HtmlUtils";
     import {requestVisitCardsStore} from "../../Stores/GameStore";
 
-    export let message: ChatMessage
+    export let message: ChatMessage;
     let showMenu: boolean = false;
     
     $: urlifyText = HtmlUtils.urlify(message.text);
@@ -18,15 +18,18 @@
     <div class="messagePart">
         {#if message.type === ChatMessageTypes.text}
             <h4>{message.author}:</h4>
-            <p contenteditable="true" bind:innerHTML={urlifyText}></p>
+            <p class="other-text" contenteditable="true" bind:innerHTML={urlifyText}></p>
         {:else if message.type === ChatMessageTypes.userIncoming}
             ➡️: User {message.author} came in
         {:else if message.type === ChatMessageTypes.userOutcoming}
             ⬅️: User {message.author} left
+        {:else if message.type === ChatMessageTypes.me}
+            <h4>Me:</h4>
+            <p class="my-text" contenteditable="true" bind:innerHTML={urlifyText}></p>
         {/if}
     </div>
     <div class="buttonPart">
-        <button class="text-btn" on:click={() => showMenu = true}>...</button>
+        <button class="text-btn" on:click={() => showMenu = !showMenu}>...</button>
         {#if showMenu}
             <ul class="selectMenu">
                 <li><button class="text-btn" disabled={!message.visitCardUrl} on:click={openVisitCard}>Visit card</button></li>
@@ -47,10 +50,16 @@
         flex-grow:1;
 
         p {
-            background: whitesmoke;
-            border-radius: 8px;
-            margin-bottom: 10px;
+          border-radius: 8px;
+          margin-bottom: 10px;
+          &.other-text {
+            background: whitesmoke; 
           }
+          
+          &.my-text {
+            background: #6489ff;
+          }
+        }
       }
     }
 
